@@ -32,7 +32,7 @@ import com.amazon.deequ.repository.ResultKey
 import com.amazon.deequ.utils.FixtureSupport
 import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.functions.when
-import org.apache.spark.sql.types._
+import org.apache.spark.sql.types.{ByteType, DoubleType, FloatType, IntegerType, LongType, NumericType, ShortType, StringType, StructField, StructType}
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.SparkSession

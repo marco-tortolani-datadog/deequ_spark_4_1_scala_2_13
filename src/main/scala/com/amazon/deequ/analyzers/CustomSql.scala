@@ -47,7 +47,7 @@ case class CustomSql(expression: String, disambiguator: String = "*") extends An
   override def computeStateFrom(data: DataFrame, filterCondition: Option[String] = None): Option[CustomSqlState] = {
 
     Try {
-      data.sqlContext.sql(expression)
+      data.sparkSession.sql(expression)
     } match {
       case Failure(e) => Some(CustomSqlState(Right(e.getMessage)))
       case Success(dfSql) =>

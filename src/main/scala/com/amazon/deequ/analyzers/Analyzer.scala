@@ -520,12 +520,13 @@ private[deequ] object Analyzers {
 
   def conditionalSelectionWithAugmentedOutcome(selection: Column,
                                                condition: Option[String]): Column = {
-    val origSelection = array(lit(InScopeData.name).as("source"), selection.as("selection"))
+    // Cast selection to string to ensure array has consistent types in Spark 4.1+
+    val origSelection = array(lit(InScopeData.name).as("source"), selection.cast(StringType).as("selection"))
 
     // The 2nd value in the array is set to null, but it can be set to anything.
     // The value is not used to evaluate the row level outcome for filtered rows (to true/null).
     // That decision is made using the 1st value which is set to "FilteredData" here.
-    val filteredSelection = array(lit(FilteredData.name).as("source"), lit(null).as("selection"))
+    val filteredSelection = array(lit(FilteredData.name).as("source"), lit(null).cast(StringType).as("selection"))
 
     condition
       .map { cond => when(expr(cond), origSelection).otherwise(filteredSelection) }

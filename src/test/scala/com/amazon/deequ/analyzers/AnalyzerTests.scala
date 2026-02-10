@@ -27,7 +27,7 @@ import com.amazon.deequ.utils.FixtureSupport
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.functions.udf
-import org.apache.spark.sql.types._
+import org.apache.spark.sql.types.{ArrayType, DecimalType, DoubleType, FloatType, IntegerType, StringType, StructField, StructType}
 import org.scalatest.Inside.inside
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
@@ -348,12 +348,11 @@ class AnalyzerTests extends AnyWordSpec with Matchers with SparkContextSpec with
       val nonZeroValuesWithStringKeys = nonZeroValues.toSeq
         .map { case (instance, distValue) => instance.toString -> distValue }
 
-      val dataTypes = DataTypeInstances.values.map { _.toString }
+      val dataTypes = DataTypeInstances.values.map { _.toString }.toSeq
 
       val zeros = dataTypes
-        .diff { nonZeroValuesWithStringKeys.map { case (distKey, _) => distKey }.toSet }
+        .diff(nonZeroValuesWithStringKeys.map { case (distKey, _) => distKey }.toSeq)
         .map(dataType => dataType -> DistributionValue(0, 0.0))
-        .toSeq
 
       val distributionValues = Map(zeros ++ nonZeroValuesWithStringKeys: _*)
 
